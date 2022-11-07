@@ -90,4 +90,25 @@ if ($ADMIN->fulltree) {
     $page->add($setting);
                                                               
     $settings->add($page);
+
+
+
+
+    // Advanced settings.
+    $page = new admin_settingpage('theme_courseextension_advanced', get_string('advancedsettings', 'theme_courseextension'));
+
+    // Raw SCSS to include before the content.
+    $setting = new admin_setting_scsscode('theme_courseextension/scsspre',
+        get_string('rawscsspre', 'theme_courseextension'), get_string('rawscsspre_desc', 'theme_courseextension'), '', PARAM_RAW);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Raw SCSS to include after the content.
+    $setting = new admin_setting_scsscode('theme_courseextension/scss', get_string('rawscss', 'theme_courseextension'),
+        get_string('rawscss_desc', 'theme_courseextension'), '', PARAM_RAW);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $settings->add($page);
+
 }

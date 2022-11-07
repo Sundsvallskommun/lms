@@ -22,7 +22,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2022092100;
+$plugin->version = 2022110400;
 $plugin->requires = 2016102100;
 
 $plugin->component = 'theme_courseextension';
