@@ -28,6 +28,7 @@ $string['sendcoursewelcomemessageaddtime_help'] = 'Visa tid när en kurs startar
 $string['pluginname_desc'] = 'Utöka waitlist plugin med mer fuktionalitet';
 $string['pluginname'] = 'Waitlistext';
 $string['messageenrolledends'] = 'Hej {$a->user}, du har blivit antagen till  <a href="{$a->courseurl}">{$a->coursename}</a>, med start {$a->startdate}';
+$string['messagteleenrolledends'] = 'Hej {$a->user}, du har blivit accepterad till {$a->coursename}, med start {$a->startdate} {$a->courseurl}';
 $string['subjectenrolledends'] = 'Du har blivit antagen till ';
 $string['task:updateautmethod_enrolments'] = 'Uppdatera waitlist-enrolments';
 $string['task:update_enrolments'] = 'Uppdatera waitlist-enrolments';
