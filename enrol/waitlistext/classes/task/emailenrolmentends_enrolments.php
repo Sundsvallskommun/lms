@@ -55,7 +55,7 @@ class emailenrolmentends_enrolments extends \core\task\scheduled_task {
 
         // Vem ska skicka mailet
         $contact = get_admin();
-        $urltoken="https://api.sundsvall.se/token";
+        $urltoken=getenv("TOKEN");
 	
 $client_id = getenv("CLIENTID");
 $client_secret = getenv("CLIENTSECRET");
@@ -106,7 +106,7 @@ $client_secret = getenv("CLIENTSECRET");
 
                 $sql = 'SELECT fieldid FROM mdl_user_info_data WHERE userid=' . $enrolleduser->id . ' AND fieldid=2 AND data=1';
 		if($DB->record_exists_sql($sql)){
-                    $url = 'https://api.sundsvall.se/messaging/2.3/sms';
+                    $url = getenv("APIURL") . '/messaging/2.3/sms';
                     $med=$msgtelwithuser;
                     $tel=$enrolleduser->phone2;
                     $ch = curl_init();
