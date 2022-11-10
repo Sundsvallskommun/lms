@@ -292,6 +292,7 @@ if ($ADMIN->fulltree) {
         saml2_settings::OPTION_TOLOWER_EXACT => get_string('tolower:exact', 'auth_saml2'),
         saml2_settings::OPTION_TOLOWER_LOWER_CASE => get_string('tolower:lowercase', 'auth_saml2'),
         saml2_settings::OPTION_TOLOWER_CASE_INSENSITIVE => get_string('tolower:caseinsensitive', 'auth_saml2'),
+        saml2_settings::OPTION_TOLOWER_CASE_AND_ACCENT_INSENSITIVE => get_string('tolower:caseandaccentinsensitive', 'auth_saml2'),
     ];
     $settings->add(new admin_setting_configselect(
             'auth_saml2/tolower',
@@ -401,4 +402,13 @@ if ($ADMIN->fulltree) {
         display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields, $help, true, true,
             $authplugin->get_custom_user_profile_fields());
     }
+
+    // The field delimiter to use for multiple value fields from IdP.
+    $settings->add(new admin_setting_configtext(
+            'auth_saml2/fielddelimiter',
+            get_string('fielddelimiter', 'auth_saml2'),
+            get_string('fielddelimiter_help', 'auth_saml2'),
+            ',',
+            PARAM_TEXT,
+            5));
 }

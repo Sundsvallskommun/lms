@@ -27,7 +27,7 @@ namespace auth_saml2;
  * @copyright   2021 Moodle Pty Ltd <support@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class auth_test extends \advanced_testcase {
+class auth_saml2_test extends \advanced_testcase {
     /**
      * Set up
      */
@@ -673,12 +673,9 @@ class auth_test extends \advanced_testcase {
 
         // Checking that the events contain the expected values.
         $events = $sink->get_events();
-        $this->assertCount(4, $events);
+        $this->assertCount(2, $events);
         $event = array_pop($events);
         $this->assertInstanceOf('\core\event\user_loggedin', $event);
-        $this->assertEquals($USER->id, $event->get_data()['objectid']);
-        $event = array_pop($events);
-        $this->assertInstanceOf('\core\event\user_updated', $event);
         $this->assertEquals($USER->id, $event->get_data()['objectid']);
         $event = array_pop($events);
         $this->assertInstanceOf('\core\event\user_created', $event);
@@ -1358,6 +1355,32 @@ class auth_test extends \advanced_testcase {
     }
 
     /**
+     * Tests we can update username with invalid case from any SAML attribute on user creation.
+     */
+    public function test_update_user_profile_fields_updates_username_on_creation_case_insensitive(): void {
+        global $CFG;
+        require_once($CFG->dirroot . '/user/profile/lib.php');
+
+        $auth = get_auth_plugin('saml2');
+        $user = $this->getDataGenerator()->create_user();
+
+        $expected = 'updated_username';
+        $uppercaseusername = strtoupper($expected);
+        $this->assertNotEquals($expected, $user->username);
+
+        set_config("field_map_username", 'field', 'auth_saml2');
+        set_config("field_updatelocal_username", 'onlogin', 'auth_saml2');
+        set_config("field_lock_username", 'locked', 'auth_saml2');
+
+        $attributes = [
+            'field' => [$uppercaseusername]
+        ];
+
+        $this->assertTrue($auth->update_user_profile_fields($user, $attributes, true));
+        $this->assertEquals($expected, $user->username);
+    }
+
+    /**
      * Tests we can't update username from any SAML attribute once a user already created.
      */
     public function test_update_user_profile_fields_does_not_update_username_on_update(): void {
@@ -1434,5 +1457,50 @@ class auth_test extends \advanced_testcase {
 
         $this->assertFalse($auth->update_user_profile_fields($user, $attributes, false));
         $this->assertNotEquals($expected, $user->alternatename);
+    }
+
+
+    /**
+     * Tests multi-value attributes can be saved to user profile fields.
+     */
+    public function test_update_user_profile_fields_multi(): void {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/user/profile/lib.php');
+
+        $this->resetAfterTest();
+
+        // Set up the initials.
+        $DB->insert_record('user_info_field', ['shortname' => 'specialities', 'name' => 'Specialities', 'required' => 1,
+                'visible' => 1, 'locked' => 0, 'categoryid' => 1, 'datatype' => 'text']);
+        $user = $this->getDataGenerator()->create_user(['auth' => 'saml2']);
+        $auth = get_auth_plugin($user->auth);
+
+        // Map IdP provided attributes to user profile fields.
+        set_config("mdlattr", 'alternatename', 'auth_saml2');
+        set_config("field_map_alternatename", 'field', 'auth_saml2');
+        set_config("field_updatelocal_alternatename", 'onlogin', 'auth_saml2');
+        set_config("field_lock_alternatename", 'locked', 'auth_saml2');
+
+        set_config("mdlattr", 'specialities', 'auth_saml2');
+        set_config("field_map_specialities", 'specialities', 'auth_saml2');
+        set_config("field_updatelocal_specialities", 'onlogin', 'auth_saml2');
+        set_config("field_lock_specialities", 'locked', 'auth_saml2');
+
+        // False payload from IdP.
+        $attributes = [
+                'field' => ['single_value'],
+                'specialities' => ['running', 'jumping', 'knitting']
+        ];
+
+        // Assert all the things.
+        $this->assertTrue($auth->update_user_profile_fields($user, $attributes, true));
+        $this->assertEquals('single_value', $user->alternatename);
+        $this->assertEquals('running,jumping,knitting', $user->specialities);
+
+        // Set the delimiter to something nonstandard.
+        set_config('fielddelimiter', '|', 'auth_saml2');
+        $this->assertTrue($auth->update_user_profile_fields($user, $attributes, true));
+        $this->assertEquals('single_value', $user->alternatename);
+        $this->assertEquals('running|jumping|knitting', $user->specialities);
     }
 }

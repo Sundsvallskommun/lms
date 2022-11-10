@@ -77,6 +77,8 @@ $string['errorparsingxml'] = 'Error parsing XML: {$a}';
 $string['exception'] = 'SAML2 exception: {$a}';
 $string['expirydays'] = 'Expiry in Days';
 $string['error'] = 'Login error';
+$string['fielddelimiter'] = 'Field delimiter';
+$string['fielddelimiter_help'] = 'The delimiter to use when a field receives an array of values from the IdP.';
 $string['flaggedresponsetypemessage'] = 'Display custom message';
 $string['flaggedresponsetyperedirect'] = 'Redirect to external URL';
 $string['flagredirecturl'] = 'Redirect URL';
@@ -185,6 +187,7 @@ $string['testdebuggingdisabled'] = 'To use this testing page SAML debugging must
 $string['tolower'] = 'Case matching';
 $string['tolower:exact'] = 'Exact';
 $string['tolower:lowercase'] = 'Lower case';
+$string['tolower:caseandaccentinsensitive'] = 'Case and accent insensitive';
 $string['tolower:caseinsensitive'] = 'Case insensitive';
 $string['tolower_help'] = '
 <p>Exact: match is case sensitive (default).</p>

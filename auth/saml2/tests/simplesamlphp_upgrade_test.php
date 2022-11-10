@@ -38,16 +38,15 @@ class auth_saml2_simplesamlphp_upgrade_testcase extends advanced_testcase {
         $filenames = [
             "auth/saml2/.extlib/simplesamlphp/composer.json",
             "auth/saml2/.extlib/simplesamlphp/composer.lock",
+            "auth/saml2/.extlib/simplesamlphp/modules/.gitignore",
         ];
 
         foreach ($filenames as $filename) {
-            foreach ($filenames as $filename) {
-                // Backwards compatibility with older PHPUnit - use old assertFile method.
-                if (method_exists($this, 'assertFileDoesNotExist')) {
-                    $this->assertFileDoesNotExist($filename);
-                } else {
-                    $this->assertFileNotExists($filename);
-                }
+            // Backwards compatibility with older PHPUnit - use old assertFile method.
+            if (method_exists($this, 'assertFileDoesNotExist')) {
+                $this->assertFileDoesNotExist($filename);
+            } else {
+                $this->assertFileNotExists($filename);
             }
         }
     }
@@ -59,7 +58,12 @@ class auth_saml2_simplesamlphp_upgrade_testcase extends advanced_testcase {
         global $CFG;
         $this->resetAfterTest();
 
-        $this->assertDirectoryNotExists($CFG->dirroot."/auth/saml2/.extlib/simplesamlphp/vendor/phpmailer");
+        // Backwards compatibility with older PHPUnit - use old assertDirectory method.
+        if (method_exists($this, 'assertDirectoryDoesNotExist')) {
+            $this->assertDirectoryDoesNotExist($CFG->dirroot."/auth/saml2/.extlib/simplesamlphp/vendor/phpmailer");
+        } else {
+            $this->assertDirectoryNotExists($CFG->dirroot."/auth/saml2/.extlib/simplesamlphp/vendor/phpmailer");
+        }
 
         $filenames = [
             $CFG->dirroot."/auth/saml2/.extlib/simplesamlphp/vendor/composer/autoload_psr4.php",
