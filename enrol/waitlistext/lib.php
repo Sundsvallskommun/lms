@@ -201,7 +201,7 @@ class enrol_waitlistext_plugin extends enrol_waitlist_plugin
 // kollar om inloggad användare tillhör förvaltning
         if ($instance->customint7 == 1) {
 
-            $departments=json_decode($instance->customtext2);
+            $departments=explode(",",$instance->customtext2);
             $departmetmatch=false;
             $departmentoutput='';
 

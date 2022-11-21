@@ -141,7 +141,7 @@ if ($mform->is_cancelled()) {
 
         $instance->customtext1    = $data->customtext1;
 
-	$instance->customtext2    = json_encode($data->customtext2,JSON_UNESCAPED_UNICODE);
+	$instance->customtext2    = implode(",",$data->customtext2);
 
 	$instance->customtext3    = $data->customtext3;
 
