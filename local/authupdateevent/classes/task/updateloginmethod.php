@@ -53,9 +53,8 @@ class updateloginmethod extends \core\task\scheduled_task {
         $plugin = enrol_get_plugin('local_authupdateevent');
 
         global $DB;
-
-        $sql='UPDATE {user} SET auth="saml2" WHERE auth="ldap"';
-        $DB->execute($sql);
+        $sql='UPDATE {user} SET auth=? WHERE auth=?';
+        $DB->execute($sql, ["saml2","ldap"]);
 
 
         if ($plugin === null){
