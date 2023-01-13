@@ -76,7 +76,7 @@ class local_badgeevent_observer
 
         //kollar om pdf finns annars skapa den
       //  if (!file_exists($filepath . $filename)) {
-
+/*
             $pdf = new FPDF();
             $pdf->AddPage();
             $pdf->Image($CFG->dirroot .'/local/badgeevent/logo/Sundsvalls.png',20,6,30);
@@ -99,16 +99,16 @@ class local_badgeevent_observer
             $pdf->Ln(20);
  //$pdf->Image($badge_context[0]);
  //$pdf->Image($imageData);
-            $doc = $pdf->Output('test.pdf', 'S');
+//            $doc = $pdf->Output('test.pdf', 'S');
 
-            $b = chunk_split(base64_encode($doc));
+//            $b = chunk_split(base64_encode($doc));
 
      //      $pdf->Output();
          //   $pdf->Output('F', $filepath .$filename );
 
 
      //   }
-
+ */
         // Skickar Email med pdf diplom
         // Från fil
        // email_to_user($user, $contact, "Diplom: " . $badgename->name , '', "Diplom", $filepath . $filename ,$filename,true);
