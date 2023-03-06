@@ -51,32 +51,17 @@ class local_badgeevent_observer
 
 
 
-   //     $filepath = $CFG->dirroot . '/tempfiles/';
-   //     $filename = $user->username . "-" . $badgename->name.'.pdf';
+        $filepath = $CFG->dirroot . '/tempfiles/';
+	$filename = $user->username . "-" . $badgename->name.'.pdf';
         // skapa upp mappen om den inte finns
-   //     if (!file_exists($filepath)) {
-   //         mkdir($filepath, 0777, true);
-   //     }
-
-
-
- // försöka få in bilg på märket!!
-           $badges = badges_get_badges(BADGE_TYPE_SITE);
-           $badgeObj = array_column($badges, null, 'id')[$badgeid] ?? false;
-           $badge_context = $badgeObj->get_context();
-
-/*
-           var_dump(print_badge_image($badgeObj, $badge_context, 'small'));
-          $img =print_badge_image($badgeObj, $badge_context, 'small');
-            $pic = base64_encode($img);
-            $imageData = base64_encode(file_get_contents('http://localhost/pluginfile.php/1/badges/badgeimage/12/f2?refresh=1222'));
-            var_dump('<img src="data:image/jpeg;base64,'.$imageData.'">');
-*/
+        if (!file_exists($filepath)) {
+            mkdir($filepath, 0777, true);
+        }
 
 
         //kollar om pdf finns annars skapa den
-      //  if (!file_exists($filepath . $filename)) {
-/*
+        if (!file_exists($filepath . $filename)) {
+
             $pdf = new FPDF();
             $pdf->AddPage();
             $pdf->Image($CFG->dirroot .'/local/badgeevent/logo/Sundsvalls.png',20,6,30);
@@ -97,24 +82,17 @@ class local_badgeevent_observer
             $pdf->Cell(60);
             $pdf->Cell(40,20, iconv('UTF-8', 'windows-1252', $expire_text_pdf));
             $pdf->Ln(20);
- //$pdf->Image($badge_context[0]);
- //$pdf->Image($imageData);
-//            $doc = $pdf->Output('test.pdf', 'S');
 
-//            $b = chunk_split(base64_encode($doc));
-
-     //      $pdf->Output();
-         //   $pdf->Output('F', $filepath .$filename );
+            $pdf->Output('F', $filepath .$filename );
 
 
-     //   }
- */
+       }
+	    
+ 
         // Skickar Email med pdf diplom
         // Från fil
-       // email_to_user($user, $contact, "Diplom: " . $badgename->name , '', "Diplom", $filepath . $filename ,$filename,true);
-//email_to_user($user, $contact, "Diplom: " . $badgename->name , '', '<iframe src="data:application/pdf;base64,'.$b .'" height="100%" width="100%"></iframe>');
-        // Tar bort pdf från tempfiles
-    //    unlink($filepath .$filename);
+        email_to_user($user, $contact, "Diplom: " . $badgename->name , '', "Diplom för genomförd kurs. Diplom bifogas som pdf i mailet", $filepath . $filename ,$filename,true);
+        unlink($filepath .$filename);
 
     }
 
