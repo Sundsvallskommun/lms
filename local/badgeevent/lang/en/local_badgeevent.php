@@ -33,3 +33,5 @@ $string['badgeremindermessagetouser_start'] = 'Reminder your badge ';
 $string['badgeremindermessagetouser_end'] = ' will expire in 1 month';
 
 $string['badgeremindersubjectemail'] = 'Your badge will expire in 1 month';
+$string['issued'] ='Issued' ;
+$string['validuntil'] ='Valid unti' ;

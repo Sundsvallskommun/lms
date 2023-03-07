@@ -19,13 +19,6 @@ class local_badgeevent_observer
         $user_issue = $event_data['relateduserid'];
        // I arrayen other från event_data hämta när märket går ut om den har slutdatum
         $badge_other = $event_data["other"];
-        if(is_null($badge_other["dateexpire"])){
-            $expire_text_pdf = "";
-        }else{
-            $badge_expire_unix =  $badge_other["dateexpire"];
-            $badge_expire = gmdate("Y-m-d", $badge_expire_unix);
-            $expire_text_pdf="Giltig till: ". $badge_expire;
-        }
 
 
         $user = \core_user::get_user($user_issue);
@@ -59,39 +52,82 @@ class local_badgeevent_observer
         }
 
 
+ 	// bild på märket för pdf
+           $badges = badges_get_badges(BADGE_TYPE_SITE);
+           $badgeObj = array_column($badges, null, 'id')[$badgeid] ?? false;
+           $badge_context = $badgeObj->get_context();
+
+           $imageurlObject = moodle_url::make_pluginfile_url($badge_context->id, 'badges', 'badgeimage', $badgeid, '/', 'f2', FALSE);
+           $imageurl = explode(" ", $imageurlObject);
+           $imageurl = $imageurl[0];
+
         //kollar om pdf finns annars skapa den
         if (!file_exists($filepath . $filename)) {
 
             $pdf = new FPDF();
-            $pdf->AddPage();
-            $pdf->Image($CFG->dirroot .'/local/badgeevent/logo/Sundsvalls.png',20,6,30);
-            $pdf->Ln(5);
+        $pdf->AddPage('P', 'A4');
+        $pdf->Rect(5, 5, 200, 287, 'D');
+        $pdf->SetAutoPageBreak(true, 10);
+        $pdf->Image($CFG->dirroot .'/local/badgeevent/logo/Sundsvalls.png',20,20,30);
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->SetTopMargin(10);
+        $pdf->SetLeftMargin(10);
+        $pdf->SetRightMargin(10);
 
-            $pdf->Cell(60);
-            $pdf->SetFont('Arial','B',24);
-            $pdf->Cell(20,1, iconv('UTF-8', 'windows-1252',"Kompetensplattformen"));
-            $pdf->Ln(30);
-            $pdf->Cell(60);
-            $pdf->Cell(20,1, iconv('UTF-8', 'windows-1252',"Diplom: " .$badgename->name));
-            $pdf->Ln(20);
-            $pdf->SetFont('Arial','B',16);
-            $pdf->Cell(60);
-            $pdf->Cell(40,20, iconv('UTF-8', 'windows-1252', "Namn: " . $user->firstname . " ". $user->lastname));
+        
+        $pdf->SetXY(10, 60);
+        $pdf->SetFont('', 'B', 20);
+        $pdf->Cell(0, 7, 'Kompetensplattformen', 0, 1, 'C', false);
+       
+        $pdf->SetTextColor(100,100,100);
+        $pdf->SetXY(10, 75);
+        $pdf->SetFontSize(14);
+        $pdf->Cell(0, 5, iconv('UTF-8', 'windows-1252',$badgename->name), 0, 1, 'C', false);
+        $pdf->SetTextColor(0);
+       
+        $pdf->SetFontSize(20);
+        $pdf->Text(80, 110, iconv('UTF-8', 'windows-1252', $user->firstname . " ". $user->lastname));
 
-            $pdf->Ln(20);
-            $pdf->Cell(60);
-            $pdf->Cell(40,20, iconv('UTF-8', 'windows-1252', $expire_text_pdf));
-            $pdf->Ln(20);
 
-            $pdf->Output('F', $filepath .$filename );
+        if(is_null($badge_other["dateexpire"])){
+            $expire_text_pdf = "";
+            $badge_expire = "";
+            
+        }else{
+            $expire_text_pdf = get_string('validuntil','local_badgeevent'); 
+            $badge_expire_unix =  $badge_other["dateexpire"];
+            $badge_expire = gmdate("Y-m-d", $badge_expire_unix);
+            $pdf->Text(140, 253, iconv('UTF-8', 'windows-1252',$expire_text_pdf));
+            $pdf->Line(141, 256, 200, 256);
+            $pdf->Text(142, 262, iconv('UTF-8', 'windows-1252', $badge_expire));
+            
+        }
+  
+            $issued_text_pdf = get_string('issued','local_badgeevent');  
+            $issued_expire_unix =  $event_data["timecreated"];
+            $badge_issued = gmdate("Y-m-d", $issued_expire_unix);
+            $pdf->Text(25, 250, iconv('UTF-8', 'windows-1252',$issued_text_pdf));
+            $pdf->Line(26, 254, 75, 254);
+            $pdf->Text(27, 260,  iconv('UTF-8', 'windows-1252', $badge_issued));
+            
+
+
+            $datatypelist  = array(
+                IMAGETYPE_GIF => "GIF",
+                IMAGETYPE_JPEG => "JPEG",
+                IMAGETYPE_PNG => "PNG",
+                IMAGETYPE_JPG => "JPG");
+                
+
+
+           $pdf->Output('F', $filepath .$filename );
 
 
        }
 	    
- 
         // Skickar Email med pdf diplom
         // Från fil
-        email_to_user($user, $contact, "Diplom: " . $badgename->name , '', "Diplom för genomförd kurs. Diplom bifogas som pdf i mailet", $filepath . $filename ,$filename,true);
+         email_to_user($user, $contact, "Diplom: " . $badgename->name , '', "Diplom för genomförd kurs. Diplom bifogas som pdf i mailet", $filepath . $filename ,$filename,true);
         unlink($filepath .$filename);
 
     }

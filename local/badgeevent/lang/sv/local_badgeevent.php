@@ -34,3 +34,5 @@ $string['badgeremindermessagetouser_start'] = 'Påminelse om att märket ';
 $string['badgeremindermessagetouser_end'] = ' slutar gälla om 1 månad';
 
 $string['badgeremindersubjectemail'] = 'Ditt märkes giltighetstid löper snart ut';
+$string['issued'] ='Utfärdat' ;
+$string['validuntil'] ='Giltig t.o.m.' ;
