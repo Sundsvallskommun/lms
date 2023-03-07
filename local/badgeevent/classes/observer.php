@@ -88,7 +88,7 @@ class local_badgeevent_observer
         $pdf->SetFontSize(20);
         $pdf->Text(80, 110, iconv('UTF-8', 'windows-1252', $user->firstname . " ". $user->lastname));
 
-
+	$pdf->SetFont('Times', '', 18);
         if(is_null($badge_other["dateexpire"])){
             $expire_text_pdf = "";
             $badge_expire = "";
@@ -98,18 +98,17 @@ class local_badgeevent_observer
             $badge_expire_unix =  $badge_other["dateexpire"];
             $badge_expire = gmdate("Y-m-d", $badge_expire_unix);
             $pdf->Text(140, 253, iconv('UTF-8', 'windows-1252',$expire_text_pdf));
-            $pdf->Line(141, 256, 200, 256);
-            $pdf->Text(142, 262, iconv('UTF-8', 'windows-1252', $badge_expire));
+            $pdf->Line(140, 256, 170, 256);
+            $pdf->Text(140, 262, iconv('UTF-8', 'windows-1252', $badge_expire));
             
         }
   
             $issued_text_pdf = get_string('issued','local_badgeevent');  
             $issued_expire_unix =  $event_data["timecreated"];
             $badge_issued = gmdate("Y-m-d", $issued_expire_unix);
-            $pdf->Text(25, 250, iconv('UTF-8', 'windows-1252',$issued_text_pdf));
-            $pdf->Line(26, 254, 75, 254);
-            $pdf->Text(27, 260,  iconv('UTF-8', 'windows-1252', $badge_issued));
-            
+            $pdf->Text(25, 253, iconv('UTF-8', 'windows-1252',$issued_text_pdf));
+            $pdf->Line(25, 256, 55, 256);
+            $pdf->Text(25, 262,  iconv('UTF-8', 'windows-1252', $badge_issued));
 
 
             $datatypelist  = array(
