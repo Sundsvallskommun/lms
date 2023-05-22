@@ -235,7 +235,7 @@ class enrol_waitlist_edit_form extends moodleform
 
         $mform->addElement('select', 'customint6', get_string('stepbystep_badge', 'enrol_waitlistext'), $allbadges);
 
-
+/* Role for future develpment ned to create more customint and customtext
         // db fråga för att hämta ut alla valbara roller !!
         $roles = $DB->get_records_sql('SELECT DISTINCT institution FROM mdl_user where institution !=""');
         //$roles=['sjuksyster','undersköterska','it-support'];
@@ -250,7 +250,7 @@ class enrol_waitlist_edit_form extends moodleform
         $mform->setDefault('customint8', $plugin->get_config('role'));
 
         $mform->addElement('select', 'customtext3', get_string('label_role', 'enrol_waitlistext'), $allroles);
-
+ */
 
 	
 	
@@ -273,7 +273,19 @@ class enrol_waitlist_edit_form extends moodleform
 
         $mform->addElement('static','description',get_string('label_department_chosen', 'enrol_waitlistext'),preg_replace('/[^A-Z,a-z0-9\-]/', '', $instance->customtext2));
 
+//-------------------------------------------------------
+	$sections = $DB->get_records_sql('SELECT DISTINCT SUBSTRING(SUBSTRING( department, LOCATE(" ", department)),2) AS sec FROM mdl_user where department !=""');
 
+        foreach($sections as $section){
+            $allsections[$section->sec] = $section->sec;
+
+        }
+
+        $mform->addElement('advcheckbox', 'customint8', get_string('section_req', 'enrol_waitlistext'));
+        $sec= $mform->addElement('select', 'customtext3', get_string('label_section', 'enrol_waitlistext'), $allsections);
+        $sec->setMultiple(true);
+        $mform->addElement('static','description',get_string('label_section_chosen', 'enrol_waitlistext'),$instance->customtext3);	
+	//_---------------------------------
 
 
         // custom fields

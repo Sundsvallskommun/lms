@@ -56,3 +56,5 @@ $string['role_help'] = 'Sätt default värde inuti waitlistext plugin';
 $string['role_req'] = 'Roll krav för att anmäla sig på kurs';
 $string['label_role'] = 'Roll krav';
 $string['label_department_chosen'] = 'De valda förvaltning';
+$string['label_section_chosen'] = 'De valda avdelning';
+

@@ -143,7 +143,10 @@ if ($mform->is_cancelled()) {
 
 	$instance->customtext2    = implode(",",$data->customtext2);
 
-	$instance->customtext3    = $data->customtext3;
+	$instance->customtext3    = implode(",",$data->customtext3);
+
+	// när roll implemeteras
+	//$instance->customtext3    = $data->customtext3;
 
 	$instance->roleid         = $data->roleid;
 
