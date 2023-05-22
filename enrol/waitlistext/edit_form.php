@@ -273,6 +273,13 @@ class enrol_waitlist_edit_form extends moodleform
 
         $mform->addElement('static','description',get_string('label_department_chosen', 'enrol_waitlistext'),preg_replace('/[^A-Z,a-z0-9\-]/', '', $instance->customtext2));
 
+//-------------------------------------------------------
+	$sections = $DB->get_records_sql('SELECT DISTINCT SUBSTRING(SUBSTRING( department, LOCATE(" ", department)),2) AS sec FROM mdl_user where department !=""');
+
+        foreach($sections as $section){
+            $allsections[$section->sec] = $section->sec;
+
+        }
 
 //-------------------------------------------------------
  $chosen_departments = explode(",",  $instance->customtext2);
