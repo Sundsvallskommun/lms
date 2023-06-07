@@ -48,3 +48,8 @@ Updates database with login method SSO for users created overnight.
 - Badgeevent ( /local/local_badgeevent )
 Sends a reminder 1 month before if a brand expires.
 Sends an email if the badge you received is required for a course.
+
+Git Pull run the following two commands.
+find /var/www/html/moodle/ -type d -exec chmod 755 {} \;
+find /var/www/html/moodle/ -type f -exec chmod 644 {} \;
+ 
