@@ -218,24 +218,31 @@ class enrol_waitlistext_plugin extends enrol_waitlist_plugin
             if(!$departmetmatch){
                 return $OUTPUT->notification(get_string('toenrol_department_pre', 'enrol_waitlistext') . ' ' . $departmentoutput);
             }
-//            $sql = 'SELECT * FROM mdl_user where SUBSTRING_INDEX( department, " ", 1 ) ="'.$instance->customtext2.'" AND id=' . $USER->id;
-//            if(!$DB->record_exists_sql($sql)){
-//                return $OUTPUT->notification(get_string('toenrol_department_pre', 'enrol_waitlistext') . ' ' .$instance->customtext2);
-//            }
-
-	//	$sql = 'SELECT * FROM mdl_user where SUBSTRING_INDEX( department, " ", 1 ) ="'.$instance->customtext2.'" AND id=' . $USER->id;
-	    
-//	    if(!$DB->record_exists_sql($sql)){
-		    
-//		    return $OUTPUT->notification(get_string('toenrol_department_pre', 'enrol_waitlistext') . ' ' .$instance->customtext2);
-	    //
-	    //
-	    //
-	    //
-	   //	    }
 
         }
-	
+
+ if ($instance->customint8 == 1) {
+            $sections=explode(",",$instance->customtext3);
+
+            $sectionmatch=false;
+            $sectionoutput='';
+
+            foreach ($sections as $section){
+                $sql = 'SELECT * FROM mdl_user where SUBSTRING(SUBSTRING( department, LOCATE(" ", department)),2) ="'. $section .'" AND id=' . $USER->id;
+                if($DB->record_exists_sql($sql)){
+                    $sectionmatch=true;
+
+                    }
+                else{
+                    $sectionoutput .= ' ' . $section;
+                }
+            }
+            if(!$sectionmatch){
+                return $OUTPUT->notification(get_string('toenrol_section_pre', 'enrol_waitlistext') . ' ' . $sectionoutput);
+            }
+
+        }
+/* När roll implemeteras
 	// kollar om inloggad användare hhar roll
         if ($instance->customint8 == 1) {
             $sql = 'SELECT * FROM mdl_user where institution ="'.$instance->customtext3.'" AND id=' . $USER->id;
@@ -243,7 +250,7 @@ class enrol_waitlistext_plugin extends enrol_waitlist_plugin
                 return $OUTPUT->notification(get_string('toenrol_role_pre', 'enrol_waitlistext') . ' ' .$instance->customtext3);
             }
         }
-
+ */
 
 
 	 // kollar om inloggad användare har tilldelat märket
